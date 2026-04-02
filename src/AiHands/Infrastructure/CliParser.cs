@@ -30,7 +30,7 @@ public class CliParser
                 else
                     Named[key] = "true";
             }
-            else if (args[i].StartsWith("-") && args[i].Length == 2)
+            else if (args[i].StartsWith("-") && args[i].Length == 2 && char.IsLetter(args[i][1]))
             {
                 var key = args[i][1..];
                 if (i + 1 < args.Length && !args[i + 1].StartsWith("-"))
