@@ -162,6 +162,11 @@ ai-hands scroll <amount> [--x <px>] [--y <px>] [--horizontal]
 
 **Output:** `{"ok":true, "amount":N, "direction":"vertical"}`
 
+**IMPORTANT — scroll targets the window under the cursor, NOT the focused window.** The OS delivers wheel events to whatever window is beneath the `--x`/`--y` coordinates (or the current cursor position if omitted). If another window overlaps your target, the scroll silently goes to the wrong app. Always:
+1. Focus the target window first with `window focus`
+2. Supply explicit `--x`/`--y` coordinates that land inside the target window
+3. Screenshot after scrolling to confirm the content actually moved
+
 ```bash
 ai-hands scroll 5                       # Scroll up 5 clicks
 ai-hands scroll -5                      # Scroll down 5 clicks
@@ -315,6 +320,8 @@ ai-hands window focus "Notepad"
 ### Step 3: Interact with the application
 
 Use click, type, key, scroll, or element commands as needed.
+
+**Before every interaction:** re-focus the target window if any other command might have shifted focus (e.g. launching another app, clicking outside). For scrolling specifically, always verify the cursor coordinates land inside the target window — scroll events are delivered to the window under the cursor, not the focused window.
 
 ### Step 4: Screenshot to verify
 
@@ -480,6 +487,14 @@ Solution: Increase `--depth`, or use `element list` first to discover available 
 ### Error: Output directory does not exist
 Cause: The parent directory for `--output` doesn't exist.
 Solution: Use the system temp directory (`$LOCALAPPDATA/Temp/`) which always exists.
+
+### Scroll doesn't seem to work / scrolls the wrong window
+Cause: The scroll wheel event goes to the window under the mouse cursor, not the focused window. If another window overlaps or the cursor isn't over the target, scrolling silently goes elsewhere.
+Solution:
+1. Focus the target window: `ai-hands window focus "My App"`
+2. Always pass `--x`/`--y` coordinates that are inside the target window's bounds (use `window find` to get the window's position and size)
+3. Screenshot before and after scrolling to confirm the content moved — **do not assume scrolling worked**
+4. If multiple windows overlap, move/minimize others or use `window find` to verify position before scrolling
 
 ### Typed text is mangled, reformatted, or triggers unintended behavior
 Cause: The application interpreted keystrokes according to its own logic (auto-complete, auto-format, shortcut triggers, character escaping, etc.).
