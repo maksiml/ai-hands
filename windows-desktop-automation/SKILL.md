@@ -15,12 +15,10 @@ Interact with Windows desktop applications by invoking the `ai-hands` CLI via Ba
 
 ## Setup
 
-```bash
-# During development (from the ai-hands repo root)
-dotnet run --project src/AiHands -- <command> [args]
+The `ai-hands` executable must be on the system PATH. See the [README](https://github.com/maksiml/ai-hands#quick-start) for installation instructions.
 
-# After publishing (faster startup)
-./publish/ai-hands.exe <command> [args]
+```bash
+ai-hands <command> [args]
 ```
 
 ## Command Reference
