@@ -15,18 +15,21 @@ No .NET runtime required — download and add to PATH:
 New-Item -ItemType Directory -Force -Path "$env:LOCALAPPDATA\ai-hands"
 Invoke-WebRequest -Uri "https://github.com/maksiml/ai-hands/releases/latest/download/ai-hands.exe" -OutFile "$env:LOCALAPPDATA\ai-hands\ai-hands.exe"
 
-# Add to PATH (current user, persistent)
+# Add to PATH (current user, persistent + current session)
 $path = [Environment]::GetEnvironmentVariable("Path", "User")
 if ($path -notlike "*ai-hands*") {
     [Environment]::SetEnvironmentVariable("Path", "$path;$env:LOCALAPPDATA\ai-hands", "User")
+    $env:Path += ";$env:LOCALAPPDATA\ai-hands"
 }
 ```
 
 Restart your terminal, then verify:
 
-```bash
-ai-hands help
+```powershell
+ai-hands.exe help
 ```
+
+> **Note:** In PowerShell, the hyphen in `ai-hands` is interpreted as a minus operator. Always include the `.exe` extension, or use `& ai-hands help`. In bash/cmd this is not an issue.
 
 ### Option 2: Clone and build from source
 
@@ -41,18 +44,19 @@ dotnet publish src/AiHands -c Release -r win-x64 --self-contained -p:PublishSing
 Then add the `publish` directory to your PATH:
 
 ```powershell
-# PowerShell — add to PATH (current user, persistent)
+# PowerShell — add to PATH (current user, persistent + current session)
 $publishDir = (Resolve-Path ./publish).Path
 $path = [Environment]::GetEnvironmentVariable("Path", "User")
 if ($path -notlike "*$publishDir*") {
     [Environment]::SetEnvironmentVariable("Path", "$path;$publishDir", "User")
+    $env:Path += ";$publishDir"
 }
 ```
 
 Restart your terminal, then verify:
 
-```bash
-ai-hands help
+```powershell
+ai-hands.exe help
 ```
 
 ## Usage
